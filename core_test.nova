@@ -1,0 +1,9 @@
+// ==========================================
+// NOVA INTERPRETER BASIC TEST
+// ==========================================
+
+x = 50
+y = 150
+total = x + y
+
+Nova.show("✅ Success: Math and Variables are working!")

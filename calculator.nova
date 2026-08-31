@@ -1,0 +1,19 @@
+Nova.bg.colour("blue")
+Nova.text.colour("white")
+Nova.clear()
+print("===============================")
+print("   NEURA STUDIO CALCULATOR     ")
+print("===============================")
+A = int(input("Pehla Number: "))
+op = input("Operator (+ - * /): ")
+B = int(input("Dusra Number: "))
+if op == "+":
+    print("Result: ", A + B)
+if op == "-":
+    print("Result: ", A - B)
+if op == "*":
+    print("Result: ", A * B)
+if op == "/":
+    print("Result: ", A / B)
+Nova.bg.colour("reset")
+Nova.text.colour("reset")

@@ -1,0 +1,13 @@
+import NovaGame
+function main() {
+Nova.show("--- NOVA GAME ENGINE (ECS & 3D MATH) TEST ---")
+dist = NovaGame.vec3_distance(0.0, 0.0, 0.0, 3.0, 4.0, 0.0)
+Nova.show("Distance (0,0,0) to (3,4,0):")
+Nova.show(dist)
+player_id = NovaGame.create_entity()
+Nova.show("Spawned Player Entity ID:")
+Nova.show(player_id)
+NovaGame.add_transform(player_id, 100.0, 50.0, 0.0)
+Nova.show("Added Transform Component to Player (100, 50, 0)")
+Nova.show("Game Engine API Execution Complete.")
+}

@@ -1,0 +1,13 @@
+module Nova {
+module Std {
+module Math {
+@Native("nova_std_math_sin") function sin(value: Float) {}
+@Native("nova_std_math_cos") function cos(value: Float) {}
+@Native("nova_std_math_sqrt") function sqrt(value: Float) {}
+@Native("nova_std_math_random") function random() {}
+}
+module Time {
+@Native("nova_std_time_now") function now() {}
+}
+}
+}

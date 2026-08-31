@@ -1,0 +1,15 @@
+import NovaMobile
+
+function main() {
+    Nova.show("--- NOVA MOBILE NDK TEST ---")
+    
+    // Android Logcat में मैसेज भेजें
+    NovaMobile.log("Nova Mobile Engine Initialized!")
+    
+    Nova.show("Vibrating phone for 500ms...")
+    
+    // असली हार्डवेयर वाइब्रेशन ट्रिगर करें!
+    NovaMobile.vibrate(500)
+    
+    Nova.show("Mobile API Execution Complete.")
+}

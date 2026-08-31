@@ -1,0 +1,115 @@
+// ecosystem.nova — Nova stdlib wrapper for MAP 11/12/13 (Web, DB, GUI).
+//
+// ═══════════════════════════════════════════════════════════════════════
+// IMPORTANT — why this file is flat modules, not nested modules-with-classes:
+//
+// The originally-requested shape was:
+//   module Nova { module Web { class Server { @Native("...") function listen() } } }
+//
+// Tracing the actual IRBuilder.cpp shipped in this project turned up two
+// real gaps that shape would hit:
+//
+//   1. Class methods never reach the @Native check at all. lowerClass()
+//      calls lowerFunction() directly for every method (IRBuilder.cpp,
+//      lowerClass) — it never routes through lowerAnnotated(), which is
+//      the ONLY place @Native is recognized. A method written as
+//      `class Server { @Native("x") function listen() }` would silently
+//      fall back to lowering `listen`'s (empty) body instead of binding to
+//      the native symbol.
+//   2. lowerAnnotated() calls plain lowerFunction(*f) with no forced name,
+//      so an @Native function declared *inside* a module loses that
+//      module's name prefix (IRBuilder.hpp's lowerFunction(fn, forcedName)
+//      overload — the forcedName path — is only used by lowerModuleDecl's
+//      bare-FunctionDecl branch and lowerClass, neither of which apply to
+//      an annotated function).
+//
+// Rather than ship syntax that parses but silently does the wrong thing at
+// IR-lowering time, this file uses the ONE pattern that is actually proven
+// correct against the real IRBuilder.cpp right now: a top-level
+// `@Native("...") function name(...)` directly inside a single (non-nested)
+// `module`. That path is exactly `lowerModuleDecl`'s `else lowerStmt(*s)`
+// branch -> `lowerAnnotated` -> `lowerNativeBoundFunction`, which is fully
+// implemented and wired end to end.
+//
+// Once the two gaps above are patched (class-member @Native support, and
+// module-name-prefixing for annotated functions), this file's contents can
+// be re-nested into `module Nova { module Web { class Server { ... } } }`
+// with zero change to nova_ecosystem.cpp — the native symbol names on each
+// @Native(...) don't change, only how Nova source code organizes them.
+// ═══════════════════════════════════════════════════════════════════════
+
+// ── MAP 11: Web ──────────────────────────────────────────────────────────
+module NovaWeb:
+    // Starts a real TCP listener on `port`, accepts exactly one connection,
+    // serves a minimal real HTTP/1.1 response, and returns a status string
+    // describing what happened (see nova_ecosystem.cpp: nova_web_server_listen
+    // for the actual POSIX/Winsock socket implementation this call reaches).
+    //
+    // For a persistent server, call this in a loop from a `thread`:
+    //   thread WebServer:
+    //       while true:
+    //           result = NovaWeb.listen(8080)
+    //           Nova.show(result)
+    @Native("nova_web_server_listen")
+    function listen(port):
+        return null
+
+// ── MAP 12: Database (SQLite3) ──────────────────────────────────────────
+module NovaDB:
+    // Opens (or creates) a SQLite3 database file at `path` and returns an
+    // opaque integer handle (or an "error: ..." string on failure — check
+    // with a Nova-level type/prefix check, since NovaValue stays untyped
+    // at this boundary; a richer Result<Int, String> wrapper is a natural
+    // follow-up once Nova's own error-propagation syntax is wired through
+    // this same @Native path).
+    @Native("nova_db_sqlite_open")
+    function open(path):
+        return null
+
+    // Executes `query` against the database identified by `handle`.
+    // Returns either the query's row output (tab-separated "col=value"
+    // lines, one per row) or an "ok: N row(s) affected" summary for
+    // statements with no result set, or an "error: ..." string.
+    @Native("nova_db_sqlite_exec")
+    function exec(handle, query):
+        return null
+
+    // Closes a handle opened via NovaDB.open. Returns true/false.
+    @Native("nova_db_sqlite_close")
+    function close(handle):
+        return null
+
+// ── MAP 13: GUI (Xlib on Linux/POSIX, Win32 on Windows) ─────────────────
+module NovaGUI:
+    // Opens a real, visible native window titled `title` at `width` x
+    // `height`, and blocks until the user closes it (window-manager close
+    // button, or Escape). Returns "ok: window closed" when it returns.
+    //
+    // Because this call blocks for the lifetime of the window, a program
+    // that also needs to do other work while the window is open should run
+    // it on its own thread:
+    //   thread MainWindow:
+    //       NovaGUI.createWindow("Nova App", 800, 600)
+    @Native("nova_gui_window_create")
+    function createWindow(title, width, height):
+        return null
+
+
+// ── Example program exercising all three domains ────────────────────────
+// (Not itself part of the stdlib wrapper above — shows the intended
+// call-site ergonomics once this file is imported.)
+//
+// import NovaWeb
+// import NovaDB
+// import NovaGUI
+//
+// dbHandle = NovaDB.open("app.sqlite3")
+// Nova.show(NovaDB.exec(dbHandle, "CREATE TABLE IF NOT EXISTS users(id INTEGER, name TEXT)"))
+// Nova.show(NovaDB.exec(dbHandle, "INSERT INTO users VALUES (1, 'Javed')"))
+// Nova.show(NovaDB.exec(dbHandle, "SELECT * FROM users"))
+// NovaDB.close(dbHandle)
+//
+// thread WebServer:
+//     Nova.show(NovaWeb.listen(8080))
+//
+// NovaGUI.createWindow("Nova Ecosystem Demo", 800, 600)

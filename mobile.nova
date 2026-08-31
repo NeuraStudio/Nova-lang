@@ -1,0 +1,9 @@
+module NovaMobile {
+    // Android/iOS के हार्डवेयर वाइब्रेशन मोटर को ट्रिगर करता है
+    @Native("nova_mobile_vibrate")
+    function vibrate(ms: Int) {}
+
+    // Android NDK Logcat या iOS System Log में मैसेज लिखता है
+    @Native("nova_mobile_log")
+    function log(message: String) {}
+}

@@ -1,0 +1,6 @@
+module NovaFFI {
+@Native("nova_ffi_load_library") function load_library(path) {}
+@Native("nova_ffi_get_symbol") function get_symbol(libHandle, symbolName) {}
+@Native("nova_ffi_invoke") function invoke(funcPtr, returnType, arg1) {}
+}
+

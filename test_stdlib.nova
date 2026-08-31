@@ -1,0 +1,14 @@
+import Nova.Std
+
+function main() {
+rn = Nova.Std.Math.random()
+sq = Nova.Std.Math.sqrt(144.0)
+tm = Nova.Std.Time.now()
+Nova.show("--- NOVA STANDARD LIBRARY TEST ---")
+Nova.show("Random Number:")
+Nova.show(rn)
+Nova.show("Square Root of 144:")
+Nova.show(sq)
+Nova.show("Current Time (ms):")
+Nova.show(tm)
+}

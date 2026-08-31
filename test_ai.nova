@@ -1,0 +1,34 @@
+module NovaAI {
+@Native("nova_ai_create") function create(r, c) {}
+@Native("nova_ai_set") function set(id, r, c, val) {}
+@Native("nova_ai_get") function get(id, r, c) {}
+@Native("nova_ai_matmul") function matmul(idA, idB) {}
+@Native("nova_ai_relu") function relu(id) {}
+}
+
+function main() {
+Nova.show("--- NOVA AI ENGINE TEST ---")
+t1 = NovaAI.create(1, 2)
+NovaAI.set(t1, 0, 0, 1.5)
+NovaAI.set(t1, 0, 1, -2.0)
+Nova.show("Created Tensor 1 (Inputs)")
+
+t2 = NovaAI.create(2, 1)
+NovaAI.set(t2, 0, 0, 2.0)
+NovaAI.set(t2, 1, 0, 3.0)
+Nova.show("Created Tensor 2 (Weights)")
+
+t3 = NovaAI.matmul(t1, t2)
+Nova.show("Executed MatMul (T1 x T2). Result Tensor ID:")
+Nova.show(t3)
+
+raw_res = NovaAI.get(t3, 0, 0)
+Nova.show("Raw Output (before ReLU):")
+Nova.show(raw_res)
+
+NovaAI.relu(t3)
+relu_res = NovaAI.get(t3, 0, 0)
+Nova.show("Output after ReLU:")
+Nova.show(relu_res)
+}
+

@@ -1,0 +1,236 @@
+// VARIABLES / CONSTANTS
+name = "Javed"
+age = 16
+height = 175.5
+online = true
+const PI = 3.1415926535
+const COMPANY = "Neura Studio"
+
+// INPUT / OUTPUT
+Nova.show(name)
+Nova.show("Hello World")
+
+// SYSTEM & RUNTIME EXTENSIONS
+osn.init()
+okl.log("Kernel OK")
+Ops.execute(0)
+aster.spawn("Worker")
+ester.track("StateChange")
+
+// MATH / COMPARISON / LOGICAL
+Nova.show(A+B)
+A == B
+A != B
+
+// IF / SWITCH (C-Style Braces)
+if age >= 18 { Nova.show("Adult") } else { Nova.show("Child") }
+switch(day) {
+case "Monday": Nova.show("Work") break
+case "Friday": Nova.show("Holiday") break
+default: Nova.show("Unknown")
+}
+
+// IF (Python-Style Indentation with Colon)
+if age >= 18:
+    Nova.show("Adult (Python style)")
+else:
+    Nova.show("Child (Python style)")
+
+// LOOPS
+for i=1 to 100 { Nova.show(i) }
+for i=1 to 100:
+    Nova.show(i)
+
+while health>0 { health-- }
+while health>0:
+    health--
+
+repeat 10 { Nova.show("Hello") }
+foreach player in players:
+    Nova.show(player)
+
+// FUNCTIONS
+function Welcome(name) { Nova.show(name) }
+function Add(a,b):
+    return a+b
+
+// COLLECTIONS
+players = ["Javed", "Ali", "Khan"]
+List users
+users.add("Javed")
+users.remove("Ali")
+user = { name:"Javed", age:16 }
+Set fruits
+fruits.add("Apple")
+Tuple location=(20,40)
+
+// OOP
+class Human:
+    name
+    function Speak():
+        Nova.show("Hello")
+
+human = Human()
+human.Speak()
+class Student : Human { roll }
+interface Animal { function Speak() }
+enum Status { Online, Offline, Busy }
+struct User { name, age }
+
+// MODULES & PACKAGE IMPORTS
+module Login:
+    function Start():
+        Nova.show("Login")
+import Nova.ai
+import Nova.web
+import Nova.database
+export Login
+
+// ERROR HANDLING / CONCURRENCY / EVENTS
+try { Nova.file.read("data.txt") } catch(error) { Nova.show(error) } finally { Nova.show("Done") }
+thread Download:
+    Nova.network.download(file)
+async function Load():
+    await Nova.database.find()
+on.start:
+    Nova.show("Started")
+on.exit:
+    Nova.show("Bye")
+
+// GENERICS / LAMBDAS / PATTERN MATCH / NULL SAFETY
+List<String> users2
+List<Int> numbers
+Map<String,User> database
+function Print<T>(value):
+    Nova.show(value)
+square = (x) => x*x
+users.filter(user => user.age>=18)
+numbers.sort((a,b) => a>b)
+match(status):
+    case Success: Nova.show("Done")
+    case Error: Nova.show("Failed")
+    default: Nova.show("Unknown")
+user?.name
+database?.connect()
+value ?? "Unknown"
+
+// ANNOTATIONS / MACROS
+@Public
+function Ping() { Nova.show("pong") }
+macro LOG(message):
+    Nova.log.info(message)
+LOG("Hello")
+
+// ---- 25 SUPER-SYNTAX EXTENSIONS ----
+slice1 = arr[1:5:2]
+piped = data |> filter |> map
+elvis = val ?: "Default"
+let point = [10, 20]
+let [px, py] = point
+for i in 1..100 step 5:
+    Nova.show(i)
+r = risky()!
+match(status2):
+    case Ok: Nova.show("ok")
+    default: Nova.show("no")
+signal score = 0
+raw = r"""line1
+line2"""
+double_fn = (x) => x*2
+doubled = [1,2,3].map($0 * 2)
+safe = obj as? String
+using f = open("file.txt"):
+    Nova.show(f)
+chan<Int> pipeline
+reg = mask[3..7]
+guard age > 0 else { return }
+comp = {k: v for k, v in pairs}
+a, b = b, a
+function Connect(ip = "127.0.0.1", port = 8080) { Nova.show(ip) }
+print(...args)
+type Matrix = Array
+extend String:
+    function Reverse():
+        return self
+city = profile?.address?.city
+lazy config = loadConfig()
+comptime:
+    Nova.show("checked")
+
+// ---- 50 GRAMMAR-TRACEABLE EXAMPLES ----
+score = 100
+const MAX_PLAYERS = 4
+health = 50
+player.health = 80
+inventory[0] = "sword"
+Nova.show("system ready")
+if online { Nova.show("connected") }
+if score >= 50:
+    Nova.show("pass")
+else:
+    Nova.show("fail")
+switch(role):
+    case "admin": Nova.show("full access") break
+    case "guest": Nova.show("read only") break
+    default: Nova.show("unknown role")
+for i=1 to 10:
+    Nova.show(i)
+while ammo>0 { ammo-- }
+repeat 5:
+    Nova.show("tick")
+foreach item in inventory:
+    Nova.show(item)
+function Greet(name):
+    Nova.show(name)
+function First<T>(list) { return list[0] }
+function Sum(a,b):
+    return a+b
+function Ping2() { Nova.show("pong") }
+class Weapon:
+    name
+    function Fire():
+        Nova.show("bang")
+class Sniper : Weapon { scope }
+interface Shooter { function Fire() }
+enum Rank { Bronze, Silver, Gold, Platinum }
+struct Coordinates { x, y, z }
+module Inventory:
+    function Add(item):
+        Nova.show(item)
+import Nova.robotics
+export Inventory
+try:
+    Nova.database.connect("NovaDB")
+catch(err):
+    Nova.show(err)
+finally:
+    Nova.show("closed")
+thread Sync:
+    Nova.cloud.sync()
+async function FetchUser():
+    await Nova.database.find.one()
+on.start:
+    Nova.show("engine boot")
+unsafe:
+    addr = Nova.memory.allocate(256)
+label = age >= 18 ? "adult" : "minor"
+canEnter = hasTicket || isVIP
+canFire = hasAmmo && !isReloading
+isMax = score == 100
+changed = oldValue != newValue
+total = price + tax
+remaining = stock - sold
+area = width * height
+average = total / count
+isEven = value % 2
+squared = base ^ 2
+isOffline = !online
+inverted = -velocity
+username = user.name
+city2 = profile?.address?.city
+displayName = nickname ?? "Guest"
+double2 = (x) => x*2
+match(connectionState):
+    case Connected: Nova.show("online")
+    case Disconnected: Nova.show("offline")
+    default: Nova.show("unknown")

@@ -1,0 +1,11 @@
+// Primitives are copied (Safe)
+score = 100
+newScore = score
+Nova.show(score)
+
+// Complex objects are MOVED (Rust-style Ownership)
+player = Player()
+activePlayer = player
+
+// Error E4001: Use of moved value 'player'
+Nova.show(player)

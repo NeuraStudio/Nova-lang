@@ -1,0 +1,22 @@
+score = 150
+snake_x = 10
+snake_y = 10
+Nova.bg.colour("black")
+Nova.clear()
+Nova.text.colour("green")
+print("====================================")
+print("=          NOVA SNAKE 3D           =")
+print("====================================")
+print("Score: ", score)
+print("Controls: W, A, S, D")
+print("")
+print("[Nova Engine] Rendering Snake Body...")
+Nova.draw.rect(snake_x, snake_y, 1, 1)
+Nova.text.colour("red")
+print("[Nova Engine] Rendering Apple...")
+Nova.draw.rect(15, 15, 1, 1)
+print("")
+Nova.text.colour("white")
+print("Note: Real-time movement requires MAP 28 (Event Loop)!")
+Nova.text.colour("reset")
+Nova.bg.colour("reset")

@@ -1,0 +1,8 @@
+function main():
+    // Constant Folding will evaluate 10 * 20 at compile-time directly to 200
+    let a = 10 * 20
+    
+    // Dead Code Elimination will remove 'unusedVar' completely
+    let unusedVar = 500
+    
+    Nova.show(a)

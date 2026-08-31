@@ -1,0 +1,136 @@
+// metal.nova — Nova stdlib wrapper for MAP 19-21 (Low-Level / Bare-Metal / Kernel concepts).
+//
+// SAFETY: everything in NovaMetal is a bounds-checked simulation running
+// inside this process's normal memory (a 16MB std::vector, plain C++
+// structs for CPU registers/GPIO pins, and a fixed table of C++-authored
+// interrupt handlers). Nothing here executes raw machine code, loads a
+// shared library at runtime, or lets a Nova program construct an arbitrary
+// callable pointer. See nova_metal.cpp's top comment for the full
+// reasoning. This module is for learning and prototyping systems-
+// programming concepts safely — it does not touch real hardware or real
+// physical memory.
+
+module NovaMetal:
+    // ── Memory-Mapped I/O (simulated RAM) ──────────────────────────────
+    // `size` must be 1, 2, 4, or 8 (bytes). Both peek and poke are fully
+    // bounds-checked against the simulated RAM's real size — an
+    // out-of-range address never crashes the program; peek returns 0 and
+    // poke returns false instead.
+    @Native("nova_metal_peek")
+    function peek(address, size):
+        return null
+
+    @Native("nova_metal_poke")
+    function poke(address, value, size):
+        return null
+
+    @Native("nova_metal_ram_size")
+    function ramSize():
+        return null
+
+    // ── Virtual CPU registers ──────────────────────────────────────────
+    // Register ids: 0=EAX, 1=EBX, 2=ECX, 3=EDX, 4=PC.
+    @Native("nova_metal_set_reg")
+    function setReg(regId, value):
+        return null
+
+    @Native("nova_metal_get_reg")
+    function getReg(regId):
+        return null
+
+    // ── GPIO (simulated) ────────────────────────────────────────────────
+    // Pins 0-63. Mode: 1=input, 2=output. A pin must be set to OUTPUT mode
+    // before gpioWrite will accept a value for it.
+    @Native("nova_metal_gpio_mode")
+    function gpioMode(pin, mode):
+        return null
+
+    @Native("nova_metal_gpio_write")
+    function gpioWrite(pin, value):
+        return null
+
+    @Native("nova_metal_gpio_read")
+    function gpioRead(pin):
+        return null
+
+    // ── UART (simulated — writes to real stdout) ────────────────────────
+    @Native("nova_metal_uart_tx")
+    function uartTx(message):
+        return null
+
+    // ── Interrupts / ISR table ──────────────────────────────────────────
+    // handlerName is one of "log" (prints and acknowledges) or "halt"
+    // (prints a simulated-halt message; the process keeps running — a
+    // real halt would defeat the purpose of a safe learning environment).
+    @Native("nova_metal_register_isr")
+    function registerIsr(interruptId, handlerName):
+        return null
+
+    @Native("nova_metal_trigger_interrupt")
+    function triggerInterrupt(interruptId):
+        return null
+
+
+// ═══════════════════════════════════════════════════════════════════════
+// EXAMPLE: write a value into simulated RAM, then trigger a simulated
+// hardware interrupt — the two things the task asked to demonstrate.
+// ═══════════════════════════════════════════════════════════════════════
+//
+// import NovaMetal
+//
+// // --- Part 1: write a value into simulated RAM and read it back ---
+// //
+// // Think of address 4096 as a memory-mapped hardware register: a real
+// // embedded program would write a control value there to configure a
+// // peripheral. Here it's just a bounds-checked slot inside NovaMetal's
+// // simulated 16MB RAM block — safe to write whatever we like.
+// address = 4096
+// controlValue = 170          // 0xAA — a recognizable bit pattern for the demo
+// wordSize = 4                // write 4 bytes (a 32-bit "register")
+//
+// ok = NovaMetal.poke(address, controlValue, wordSize)
+// if ok:
+//     Nova.show("Wrote control value to simulated address 4096")
+// else:
+//     Nova.show("Write failed (out of bounds) — this should not happen for address 4096")
+//
+// readBack = NovaMetal.peek(address, wordSize)
+// Nova.show("Read back from simulated RAM: " + readBack)   // -> 170
+//
+// // Try an intentionally invalid address, to show the safety guarantee:
+// // this NEVER crashes the program, unlike a real raw pointer would.
+// badRead = NovaMetal.peek(999999999, wordSize)
+// Nova.show("Out-of-bounds read safely returned: " + badRead)  // -> 0
+//
+// // --- Part 2: set up virtual CPU registers ---
+// //
+// // Register ids: 0=EAX, 1=EBX, 2=ECX, 3=EDX, 4=PC. This models the kind
+// // of register bookkeeping a tiny virtual CPU or bytecode interpreter
+// // does between "instructions" — entirely in safe C++ struct fields.
+// NovaMetal.setReg(0, controlValue)     // EAX = 170
+// NovaMetal.setReg(4, address)          // PC  = 4096 (pretend we "jumped" here)
+// Nova.show("EAX = " + NovaMetal.getReg(0))
+// Nova.show("PC  = " + NovaMetal.getReg(4))
+//
+// // --- Part 3: configure a GPIO pin and blink it ---
+// NovaMetal.gpioMode(13, 2)             // pin 13 = OUTPUT (mirrors the classic "LED on pin 13" example)
+// NovaMetal.gpioWrite(13, true)
+// NovaMetal.gpioWrite(13, false)
+//
+// // --- Part 4: UART transmit ---
+// NovaMetal.uartTx("Bare-metal Nova program booted successfully.")
+//
+// // --- Part 5: register an interrupt handler, then trigger it ---
+// //
+// // This models the classic embedded/kernel pattern: install a handler
+// // for interrupt line 7 (imagine it's a timer or a button-press IRQ),
+// // then simulate hardware raising that interrupt.
+// NovaMetal.registerIsr(7, "log")
+// Nova.show("ISR registered for interrupt 7. Triggering it now...")
+// NovaMetal.triggerInterrupt(7)
+// // -> prints: [nova.metal.isr] interrupt 7 handled by 'log' ISR
+//
+// // Triggering an interrupt with NO registered handler is still safe —
+// // it logs "unhandled interrupt" instead of crashing or jumping to
+// // garbage memory the way a real unhandled hardware interrupt could.
+// NovaMetal.triggerInterrupt(99)

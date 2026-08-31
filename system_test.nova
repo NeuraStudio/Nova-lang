@@ -1,0 +1,9 @@
+// 1. SAFE ALLOCATION (Allowed inside unsafe block)
+unsafe:
+    ptr = Nova.memory.allocate(1024)
+    nextPtr = Ops.ptr_add(ptr, 8)
+    val = Ops.deref(nextPtr)
+    Nova.memory.free(ptr)
+
+// 2. DANGEROUS ALLOCATION (Triggers Error outside unsafe block)
+badPtr = Nova.memory.allocate(256)

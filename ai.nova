@@ -1,0 +1,8 @@
+module NovaAI {
+@Native("nova_ai_create") function create(rows, cols) {}
+@Native("nova_ai_set") function set(id, row, col, value) {}
+@Native("nova_ai_get") function get(id, row, col) {}
+@Native("nova_ai_matmul") function matmul(a, b) {}
+@Native("nova_ai_relu") function relu(id) {}
+}
+

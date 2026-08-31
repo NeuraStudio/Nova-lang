@@ -1,0 +1,15 @@
+module MathLib:
+    // Private function (Cannot be exported)
+    function calculateInternal(a, b):
+        return a + b
+    
+    // Public function (Can be exported)
+    @Public
+    function add(a, b):
+        return calculateInternal(a, b)
+
+// सही Export (क्योंकि add @Public है)
+export add
+
+// गलत Export (यह Semantic Error देगा क्योंकि calculateInternal private है)
+export calculateInternal

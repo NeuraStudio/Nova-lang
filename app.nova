@@ -1,0 +1,6 @@
+// क्रॉस-फाइल इम्पोर्ट!
+import math_lib
+
+function main():
+    result = add(10, 20)
+    Nova.show(result)

@@ -1,0 +1,7 @@
+function main():
+    a = 15
+    b = 25
+    c = a + b
+    Nova.show("Hello from Nova Runtime!")
+    Nova.show("15 + 25 =")
+    Nova.show(c)

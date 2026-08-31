@@ -1,0 +1,19 @@
+// ==========================================
+// 🎮 NOVA CLI GAME: GUESS THE NUMBER
+// ==========================================
+
+Nova.show("=======================================")
+Nova.show("   Welcome to Nova Guessing Game!      ")
+Nova.show("=======================================")
+
+secret = 42
+Nova.show("I have thought of a secret number.")
+
+guess = Nova.ask.user("Enter your guess: ")
+guess_num = guess * 1
+
+if (guess_num == secret):
+    Nova.show("🎉 YOU WON! 42 is the correct answer.")
+else:
+    Nova.show("❌ Wrong! The secret was 42.")
+
